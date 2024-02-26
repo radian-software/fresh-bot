@@ -36,12 +36,11 @@ export async function run() {
     },
   });
 
-  const notificationsRequest = octokit.activity.listNotificationsForAuthenticatedUser.endpoint.merge(
-    {
+  const notificationsRequest =
+    octokit.activity.listNotificationsForAuthenticatedUser.endpoint.merge({
       all: true,
       since: moment().subtract(7, "days").toISOString(),
-    }
-  );
+    });
 
   return octokit.paginate(notificationsRequest).then((notifications) => {
     const promises = notifications.map((notification) => {
