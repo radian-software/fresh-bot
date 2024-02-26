@@ -2,7 +2,7 @@ import { isBot, commentUrlParamsRegex } from "./utils/utils";
 import { config, devEnv } from "./config/config";
 
 const { Octokit } = require("@octokit/action");
-const { throttling } = require("@octokit/plugin-throttling");
+import { throttling } from "@octokit/plugin-throttling";
 const moment = require("moment");
 
 if (devEnv()) {
