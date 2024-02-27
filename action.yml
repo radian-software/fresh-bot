@@ -1,10 +1,10 @@
-name: 'Fresh-bot'
-author: 'c-hive'
-description: ''
+name: "Fresh-bot"
+author: "c-hive"
+description: ""
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node20"
+  main: "dist/index.js"
 inputs:
   GITHUB_TOKEN:
-    description: 'Personal access token with full control of private repositories scope enabled'
+    description: "Personal access token with full control of private repositories scope enabled"
     required: true
