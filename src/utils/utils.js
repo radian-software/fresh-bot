@@ -1,8 +1,8 @@
 export function isBot(commentData) {
-  const userTypeRegex = new RegExp("^Bot$");
+  const userTypeRegex = /^Bot$/;
   const bodyRegexes = [
-    new RegExp("This issue has been automatically marked as stale"),
-    new RegExp("This issue hasn't had any recent activity"),
+    /This issue has been automatically marked as stale/,
+    /This issue hasn't had any recent activity/,
   ];
 
   const { type } = commentData.user;
@@ -14,8 +14,7 @@ export function isBot(commentData) {
   return userMatch && bodyMatch;
 }
 
+// eslint-disable-next-line prefer-regex-literals
 export const commentUrlParamsRegex = new RegExp(
-  // Otherwise, the escape characters are removed from the expression.
-  // eslint-disable-next-line prettier/prettier, no-useless-escape
-  "(?:https:\/\/)(?:api\.github\.com)\/(?:repos)\/(?<owner>[\\w-]+)\/(?<repo>[\\w-]+)\/(?:issues)\/(?<issue_number>[0-9]+)"
+  "(?:https://)(?:api.github.com)/(?:repos)/(?<owner>[\\w-]+)/(?<repo>[\\w-]+)/(?:issues)/(?<issue_number>[0-9]+)"
 );

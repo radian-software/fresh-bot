@@ -1,9 +1,10 @@
+import { Octokit } from "@octokit/action";
+// eslint-disable-next-line import/no-unresolved
+import { throttling } from "@octokit/plugin-throttling";
+import moment from "moment";
+
 import { isBot, commentUrlParamsRegex } from "./utils/utils";
 import { config, devEnv } from "./config/config";
-
-const { Octokit } = require("@octokit/action");
-import { throttling } from "@octokit/plugin-throttling";
-const moment = require("moment");
 
 if (devEnv()) {
   // eslint-disable-next-line global-require, import/no-extraneous-dependencies
