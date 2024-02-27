@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Bump stale issues
-        uses: c-hive/fresh-bot@v1
+        uses: raxod502/fresh-bot@master
         with:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Needs `repo` scope
 ```
