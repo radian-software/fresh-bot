@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { isBot } from "./utils";
+import { isBot } from "./utils.js";
 
 describe("isBot", () => {
   describe("when data doesn't have bot body", () => {

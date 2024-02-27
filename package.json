@@ -46,8 +46,6 @@
   "engines": {
     "npm": ">=6.6"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ]
+  "pre-commit": ["lint", "test"],
+  "type": "module"
 }
