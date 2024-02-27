@@ -2,13 +2,13 @@ import { Octokit } from "@octokit/action";
 // eslint-disable-next-line import/no-unresolved
 import { throttling } from "@octokit/plugin-throttling";
 import moment from "moment";
+import dotenv from "dotenv-safe";
 
-import { isBot, commentUrlParamsRegex } from "./utils/utils";
-import { config, devEnv } from "./config/config";
+import { isBot, commentUrlParamsRegex } from "./utils/utils.js";
+import { config, devEnv } from "./config/config.js";
 
 if (devEnv()) {
-  // eslint-disable-next-line global-require, import/no-extraneous-dependencies
-  require("dotenv-safe").config();
+  dotenv.config();
 }
 
 const ThrottledOctokit = Octokit.plugin(throttling);
@@ -19,6 +19,15 @@ export async function run() {
       onRateLimit: (retryAfter, options) => {
         console.error(
           `Request quota exhausted for request ${options.method} ${options.url}, number of total global retries: ${options.request.retryCount}`
+        );
+
+        console.log(`Retrying after ${retryAfter} seconds!`);
+
+        return config.retriesEnabled;
+      },
+      onSecondaryRateLimit: (retryAfter, options) => {
+        console.error(
+          `Hit secondary rate limit for request ${options.method} ${options.url}, number of total global retries: ${options.request.retryCount}`
         );
 
         console.log(`Retrying after ${retryAfter} seconds!`);

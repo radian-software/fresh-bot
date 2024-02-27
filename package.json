@@ -16,22 +16,22 @@
     "@octokit/plugin-throttling": "^9.0.1",
     "@vercel/ncc": "^0.38.1",
     "moment": "^2.30.1",
-    "npm-check-updates": "^16.14.15"
+    "npm-check-updates": "^16.14.15",
+    "dotenv-safe": "^9.1.0"
   },
   "//devDependencies": {
-    "@zeit/ncc": "build into a single file",
+    "@vercel/ncc": "build into a single file",
     "dotenv-safe": "load environment variables for local development",
     "eslint*": "code style",
     "pre-commit": "run scripts before each commit",
     "prettier": "code formatting",
-    "mocha": "test farmework",
+    "mocha": "test framework",
     "chai": "test assertions",
     "esm": "ES^ support for mocha"
   },
   "devDependencies": {
     "chai": "^5.1.0",
     "cross-env": "^7.0.3",
-    "dotenv-safe": "^9.1.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
