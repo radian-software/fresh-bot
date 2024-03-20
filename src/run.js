@@ -55,7 +55,7 @@ export async function run() {
   return octokit.paginate(notificationsRequest).then((notifications) => {
     const promises = notifications.map((notification) => {
       const { latest_comment_url: latestCommentUrl } = notification.subject;
-      const { url: subjectUrl } = notification.subject;
+      const { url: subjectUrl, title: subject } = notification.subject;
 
       if (!latestCommentUrl || !subjectUrl) {
         return new Promise((resolve) => {
@@ -65,50 +65,63 @@ export async function run() {
         });
       }
 
-      return octokit.request(latestCommentUrl).then(({ data }) => {
-        const releaseNotification = data.author && !data.user;
+      return octokit
+        .request(latestCommentUrl)
+        .then(({ data }) => {
+          const releaseNotification = data.author && !data.user;
 
-        if (releaseNotification) {
-          return Promise.resolve();
-        }
+          if (releaseNotification) {
+            return Promise.resolve();
+          }
 
-        if (!isBot(data)) {
-          return new Promise((resolve) => {
+          if (!isBot(data)) {
+            return new Promise((resolve) => {
+              console.log(
+                "Comment for",
+                latestCommentUrl,
+                "is not left by a stale bot on issue",
+                subject
+              );
+
+              resolve();
+            });
+          }
+
+          console.log(
+            "Found stale bot comment",
+            latestCommentUrl,
+            "on issue",
+            subject
+          );
+
+          if (devEnv()) {
+            return new Promise((resolve) => {
+              console.log(
+                "Responding to stale bot comments is disabled in development environment."
+              );
+
+              resolve();
+            });
+          }
+
+          const commentParams = commentUrlParamsRegex.exec(subjectUrl);
+
+          return octokit.issues.createComment({
+            ...commentParams.groups,
+            body: config.message,
+          });
+        })
+        .catch((err) => {
+          if (err.status === 404) {
             console.log(
               "Comment for",
               latestCommentUrl,
-              "is not left by a stale bot on issue",
-              subjectUrl
+              "appears to be in a private repository we don't have access to"
             );
-
-            resolve();
-          });
-        }
-
-        console.log(
-          "Found stale bot comment",
-          latestCommentUrl,
-          "on issue",
-          subjectUrl
-        );
-
-        if (devEnv()) {
-          return new Promise((resolve) => {
-            console.log(
-              "Responding to stale bot comments is disabled in development environment."
-            );
-
-            resolve();
-          });
-        }
-
-        const commentParams = commentUrlParamsRegex.exec(subjectUrl);
-
-        return octokit.issues.createComment({
-          ...commentParams.groups,
-          body: config.message,
+          } else {
+            throw err;
+          }
         });
-      });
     });
 
     return Promise.all(promises);
