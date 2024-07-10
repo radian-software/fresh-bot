@@ -3,15 +3,18 @@ export function isBot(commentData) {
   const bodyRegexes = [
     /This issue has been automatically marked as stale/,
     /This issue hasn't had any recent activity/,
+    /lifecycle stale/,
   ];
+  const loginRegexes = [/^.+-bot$/, /^.+-robot$/];
 
-  const { type } = commentData.user;
+  const { login, type } = commentData.user;
   const { body } = commentData;
 
   const userMatch = userTypeRegex.test(type);
   const bodyMatch = bodyRegexes.some((bodyRegex) => bodyRegex.test(body));
+  const loginMatch = loginRegexes.some((loginRegex) => loginRegex.test(login));
 
-  return userMatch && bodyMatch;
+  return (userMatch || loginMatch) && bodyMatch;
 }
 
 // eslint-disable-next-line prefer-regex-literals
