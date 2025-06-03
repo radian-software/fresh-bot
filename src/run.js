@@ -1,5 +1,4 @@
 import { Octokit } from "@octokit/action";
-// eslint-disable-next-line import/no-unresolved
 import { throttling } from "@octokit/plugin-throttling";
 import moment from "moment";
 import dotenv from "dotenv-safe";
