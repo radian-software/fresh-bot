@@ -3,6 +3,8 @@ export function isBot(commentData) {
   const bodyRegexes = [
     new RegExp("This issue has been automatically marked as stale"),
     new RegExp("This issue hasn't had any recent activity"),
+    // GitHub's built-in stale workflow phrasing
+    new RegExp("This issue has been inactive for \\d+ days"),
   ];
 
   const { type } = commentData.user;
