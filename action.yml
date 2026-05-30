@@ -5,7 +5,8 @@ runs:
   using: "docker"
   image: "Dockerfile"
   # I hate my life I hate my life
-  entrypoint: ["env", "GITHUB_TOKEN=${{ inputs.GITHUB_TOKEN }}", "FOR_REAL=1"]
+  # Update: I hate my life slightly more than last time
+  entrypoint: "env GITHUB_TOKEN=${{ inputs.GITHUB_TOKEN }} FOR_REAL=1"
 inputs:
   GITHUB_TOKEN:
     description: "Personal access token with full control of private repositories scope enabled"
