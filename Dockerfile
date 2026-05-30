@@ -6,4 +6,4 @@ RUN npm ci
 
 COPY index.js .env.example /work/
 COPY src/ /work/src/
-CMD ["node", "index.js"]
+CMD cd /work && exec node index.js
