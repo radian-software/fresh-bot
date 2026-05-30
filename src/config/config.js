@@ -5,7 +5,3 @@ export const config = {
 /remove-lifecycle stale
 `,
 };
-
-export function devEnv() {
-  return process.env.NODE_ENV === "dev";
-}

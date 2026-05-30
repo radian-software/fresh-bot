@@ -2,8 +2,8 @@ name: "Fresh-bot"
 author: "c-hive"
 description: ""
 runs:
-  using: "node20"
-  main: "dist/index.js"
+  using: "node26"
+  main: "index.js"
 inputs:
   GITHUB_TOKEN:
     description: "Personal access token with full control of private repositories scope enabled"

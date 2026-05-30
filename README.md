@@ -44,6 +44,7 @@ jobs:
         uses: raxod502/fresh-bot@master
         with:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Needs `repo` scope
+          FOR_REAL: "1"
 ```
 
 ## Conventions

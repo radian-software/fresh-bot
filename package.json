@@ -2,10 +2,8 @@
   "name": "fresh",
   "version": "1.0.3",
   "description": "A bot against stale bots",
-  "main": "dist/index.js",
+  "main": "src/run.js",
   "scripts": {
-    "build": "ncc build index.js --minify",
-    "dev": "cross-env NODE_ENV=dev node ./index.js",
     "lint": "eslint . --no-error-on-unmatched-pattern",
     "lint:fix": "eslint . --no-error-on-unmatched-pattern --fix",
     "test": "mocha src/**/*.test.js --require esm"
@@ -15,14 +13,11 @@
     "@octokit/action": "^8.0.2",
     "@octokit/plugin-throttling": "^9.0.1",
     "@stylistic/eslint-plugin": "^3.1.0",
-    "@vercel/ncc": "^0.38.1",
     "dotenv-safe": "^9.1.0",
     "eslint-config-airbnb-extended": "^1.0.11",
-    "moment": "^2.30.1",
-    "npm-check-updates": "^19.3.1"
+    "moment": "^2.30.1"
   },
   "//devDependencies": {
-    "@vercel/ncc": "build into a single file",
     "dotenv-safe": "load environment variables for local development",
     "eslint*": "code style",
     "pre-commit": "run scripts before each commit",
@@ -49,9 +44,6 @@
   "engines": {
     "npm": ">=6.6"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
+  "pre-commit": ["lint", "test"],
   "type": "module"
 }

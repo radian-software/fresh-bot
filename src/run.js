@@ -4,11 +4,9 @@ import moment from "moment";
 import dotenv from "dotenv-safe";
 
 import { isBot, commentUrlParamsRegex } from "./utils/utils.js";
-import { config, devEnv } from "./config/config.js";
+import { config } from "./config/config.js";
 
-if (devEnv()) {
-  dotenv.config();
-}
+dotenv.config();
 
 const ThrottledOctokit = Octokit.plugin(throttling);
 
@@ -93,7 +91,7 @@ export async function run() {
             subject
           );
 
-          if (devEnv()) {
+          if (process.env.FOR_REAL !== "1") {
             return new Promise((resolve) => {
               console.log(
                 "Responding to stale bot comments is disabled in development environment."
