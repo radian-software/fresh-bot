@@ -7,7 +7,3 @@ runs:
   env:
     GITHUB_TOKEN: "${{ inputs.GITHUB_TOKEN }}"
     FOR_REAL: "1"
-inputs:
-  GITHUB_TOKEN:
-    description: "Personal access token with full control of private repositories scope enabled"
-    required: true
