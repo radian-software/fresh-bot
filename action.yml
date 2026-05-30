@@ -2,7 +2,7 @@ name: "Fresh-bot"
 author: "c-hive"
 description: ""
 runs:
-  using: "node26"
+  using: "node24"
   main: "index.js"
 inputs:
   GITHUB_TOKEN:
