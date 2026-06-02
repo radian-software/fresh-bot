@@ -1,9 +1,0 @@
-name: "Fresh-bot"
-author: "c-hive"
-description: ""
-runs:
-  using: "docker"
-  image: "Dockerfile"
-  env:
-    GITHUB_TOKEN: "${{ inputs.GITHUB_TOKEN }}"
-    FOR_REAL: "1"

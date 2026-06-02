@@ -1,3 +1,5 @@
+import * as process from "process";
+
 import { Octokit } from "@octokit/action";
 import { throttling } from "@octokit/plugin-throttling";
 import moment from "moment";
@@ -49,78 +51,85 @@ export async function run() {
       since: moment().subtract(7, "days").toISOString(),
     });
 
-  return octokit.paginate(notificationsRequest).then((notifications) => {
-    const promises = notifications.map((notification) => {
-      const { latest_comment_url: latestCommentUrl } = notification.subject;
-      const { url: subjectUrl, title: subject } = notification.subject;
+  return octokit
+    .paginate(notificationsRequest)
+    .then((notifications) => {
+      const promises = notifications.map((notification) => {
+        const { latest_comment_url: latestCommentUrl } = notification.subject;
+        const { url: subjectUrl, title: subject } = notification.subject;
 
-      if (!latestCommentUrl || !subjectUrl) {
-        return new Promise((resolve) => {
-          console.log("Missing latest comment or subject url");
+        if (!latestCommentUrl || !subjectUrl) {
+          return new Promise((resolve) => {
+            console.log("Missing latest comment or subject url");
 
-          resolve();
-        });
-      }
+            resolve();
+          });
+        }
 
-      return octokit
-        .request(latestCommentUrl)
-        .then(({ data }) => {
-          const releaseNotification = data.author && !data.user;
+        return octokit
+          .request(latestCommentUrl)
+          .then(({ data }) => {
+            const releaseNotification = data.author && !data.user;
 
-          if (releaseNotification) {
-            return Promise.resolve();
-          }
+            if (releaseNotification) {
+              return Promise.resolve();
+            }
 
-          if (!isBot(data)) {
-            return new Promise((resolve) => {
+            if (!isBot(data)) {
+              return new Promise((resolve) => {
+                console.log(
+                  "Comment for",
+                  latestCommentUrl,
+                  "is not left by a stale bot on issue",
+                  subject
+                );
+
+                resolve();
+              });
+            }
+
+            console.log(
+              "Found stale bot comment",
+              latestCommentUrl,
+              "on issue",
+              subject
+            );
+
+            if (process.env.FOR_REAL !== "1") {
+              return new Promise((resolve) => {
+                console.log(
+                  "Responding to stale bot comments is disabled in development environment."
+                );
+
+                resolve();
+              });
+            }
+
+            const commentParams = commentUrlParamsRegex.exec(subjectUrl);
+
+            return octokit.issues.createComment({
+              ...commentParams.groups,
+              body: config.message,
+            });
+          })
+          .catch((err) => {
+            if (err.status === 404) {
               console.log(
                 "Comment for",
                 latestCommentUrl,
-                "is not left by a stale bot on issue",
-                subject
+                "appears to be in a private repository we don't have access to"
               );
-
-              resolve();
-            });
-          }
-
-          console.log(
-            "Found stale bot comment",
-            latestCommentUrl,
-            "on issue",
-            subject
-          );
-
-          if (process.env.FOR_REAL !== "1") {
-            return new Promise((resolve) => {
-              console.log(
-                "Responding to stale bot comments is disabled in development environment."
-              );
-
-              resolve();
-            });
-          }
-
-          const commentParams = commentUrlParamsRegex.exec(subjectUrl);
-
-          return octokit.issues.createComment({
-            ...commentParams.groups,
-            body: config.message,
+            } else {
+              throw err;
+            }
           });
-        })
-        .catch((err) => {
-          if (err.status === 404) {
-            console.log(
-              "Comment for",
-              latestCommentUrl,
-              "appears to be in a private repository we don't have access to"
-            );
-          } else {
-            throw err;
-          }
-        });
-    });
+      });
 
-    return Promise.all(promises);
-  });
+      return Promise.all(promises);
+    })
+    .then(async () => {
+      if (process.env.WEBHOOK_URL) {
+        await fetch(process.env.WEBHOOK_URL);
+      }
+    });
 }
